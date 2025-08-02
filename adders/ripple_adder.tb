@@ -1,0 +1,52 @@
+`timescale 1ns / 1ps
+
+module tb_ripple_carry_adder;
+
+    // Parameters
+    parameter N = 4;
+
+    // Inputs
+    reg [N-1:0] A;
+    reg [N-1:0] B;
+    reg Cin;
+
+    // Outputs
+    wire [N-1:0] Sout;
+    wire Cout;
+
+    // Instantiate the Ripple Carry Adder
+    ripple_carry_adder #(N) RCA (
+        .A(A),
+        .B(B),
+        .Cin(Cin),
+        .Sout(Sout),
+        .Cout(Cout)
+    );
+
+    // Test procedure
+    initial begin
+        // Initialize inputs
+        A = 4'b0000; 
+        B = 4'b0000; 
+        Cin = 0;
+
+        // Test all combinations
+        for (integer i = 0; i < 16; i = i + 1) begin
+            for (integer j = 0; j < 16; j = j + 1) begin
+                A = i; 
+                B = j; 
+                Cin = 0; 
+                #10;  // Wait for 10 time units
+                $display("A: %b, B: %b, Cin: %b -> Sout: %b, Cout: %b", A, B, Cin, Sout, Cout);
+                
+                // Test with Cin = 1
+                Cin = 1;
+                #10;  // Wait for 10 time units
+                $display("A: %b, B: %b, Cin: %b -> Sout: %b, Cout: %b", A, B, Cin, Sout, Cout);
+            end
+        end
+
+        // Finish simulation
+        $finish;
+    end
+endmodule
